@@ -4,7 +4,9 @@
 
 (defn start-menu
   []
-  (println (str "Hello film lover! Welcome to \"MOVIELAND\",
+  (println (str "
+  ####################################################################
+  Hello film lover! Welcome to \"MOVIELAND\",
   your personal assistant in finding right movie,
   based on your preferences.
 
@@ -12,18 +14,20 @@
   Type one of the following numbers...
 
   I can find movie(s) based on...
-  1. genre, director, rating, ...
+  1. genre, director, rating, duration, director, actor
   2. your feelings, occasion, ...
+  3. title
 
   Type \"end\" if you want to exit the app.
+  ####################################################################
   "))
   )
 
 (defn user-choice
   []
-  (let [choice (get-value "your choice: ")]
+  (let [choice (get-value "your choice")]
     (case choice
-      "1" (try-with-x)
+      "1" (first-choice)
       "end")
     ))
 (defn start
