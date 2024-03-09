@@ -24,19 +24,24 @@
 (defn format-output
   "Enables better display for user"
   [movie]
-  {"TITLE:" (:Series_Title movie)
-   "GENRE:" (:Genre movie)
-   "YEAR:" (:Released_Year movie)
-   "DURATION:" (:Runtime movie)
-   "RATING:" (:IMDB_Rating movie)
-   })
+  (str
+    "TITLE: " (:Series_Title movie) ", "
+    "GENRE: " (:Genre movie) ", "
+    "YEAR: " (:Released_Year movie) ", "
+    "DURATION: " (:Runtime movie)", "
+    "RATING: " (:IMDB_Rating movie))
+  )
 
 (defn print-format
   "Printing movies in new format, with added row numbers"
   [m]
+  (println)
+  (println "*** MOVIE(S) FOR YOU ***")
   (doseq [index (range (count m))]
     (let [m (nth m index)]
       (println (str (inc index) ". ") (format-output m)))))
 ;(print-format movies)
 
-
+;(mapv
+;  #(clojure.string/includes? (:Genre %) "Comedy") test-example
+;  )

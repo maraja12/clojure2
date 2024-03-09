@@ -25,7 +25,7 @@
 
 (defn user-choice
   []
-  (let [choice (get-value "your choice")]
+  (let [choice (get-value "your choice:")]
     (case choice
       "1" (first-choice)
       "end")

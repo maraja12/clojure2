@@ -4,9 +4,9 @@
 
 (defn find-genre
   "Filtering data by genre"
-  [genre]
-  (filter #(clojure.string/includes? (:Genre %) genre) movies))
-;(find-genre "Comedy")
+  [genre ds]
+  (filter #(clojure.string/includes? (:Genre %) genre) ds))
+
 
 (defn find-title
   "Filtering data by title"
@@ -17,10 +17,13 @@
 (defn str-to-int
   "Converting string into integer"
   [s]
-  (try
-    (Integer/parseInt s)
-    (catch NumberFormatException e
-      nil))
+  (if (not (empty? s))
+    (try
+      (Integer/parseInt s)
+      (catch NumberFormatException e
+        ;(println "Invalid input! This filed requires a number.")
+        nil))
+    )
   )
 
 (defn str-to-double
@@ -29,6 +32,7 @@
   (try
     (Double/parseDouble s)
     (catch NumberFormatException e
+      ;(println "Invalid input! This filed requires a number.")
       nil))
   )
 
@@ -46,8 +50,15 @@
 (defn find-year
   "Filtering movies which are younger or exact year"
   [year]
-  (filter #(>= (or (str-to-int (:Released_Year %)) 0) (str-to-int year)) movies))
+  (let [year (str-to-int year)]
+    (if (not= year nil)
+             (filter #(>= (or (str-to-int (:Released_Year %)) 0) year) movies)
+             (println "Please enter the value again...")
+             )
+
+    ))
 ;(find-year "2019")
+;(find-year "")
 
 (defn find-duration
   "Filtering data by duration"
@@ -84,8 +95,8 @@
                 )
           movies)
   )
-(year-genre-rating-duration "2019" "Comedy" "8.0" "100")
-;
+;(year-genre-rating-duration "2019" "Comedy" "8.0" "100")
+
 (defn year-genre-director
   [year genre director]
   (filter #(and (>= (or (str-to-int (:Released_Year %)) 0) (str-to-int year))
@@ -135,16 +146,28 @@
 
 (defn year-genre-rating-duration-actor-director
   [year genre rating duration actor director]
-  (filter #(and (>= (or (str-to-int (:Released_Year %)) 0) (str-to-int year))
-                (clojure.string/includes? (:Genre %) genre)
-                (>= (or (str-to-double (:IMDB_Rating %)) 0) (str-to-double rating))
-                (<= (or (str-to-int (extract-duration (:Runtime %))) 0)
-                    (str-to-int duration))
-                (clojure.string/includes? (:Stars %) actor)
-                (clojure.string/includes? (:Director %) director)
-                )
-          (movies-with-stars movies))
-  )
+  (let [year (str-to-int year)
+        rating (str-to-double rating)
+        duration (str-to-int duration)]
+    (if (some nil? [year rating duration])
+      (println "
+      Invalid input! This filed requires a number.
+      Please enter the value again...")
+      (filter #(and (>= (or (str-to-int (:Released_Year %)) 0) year)
+                    (clojure.string/includes? (:Genre %) genre)
+                    (>= (or (str-to-double (:IMDB_Rating %)) 0) rating)
+                    (<= (or (str-to-int (extract-duration (:Runtime %))) 0)
+                        duration)
+                    (clojure.string/includes? (:Stars %) actor)
+                    (clojure.string/includes? (:Director %) director)
+                    )
+              (movies-with-stars movies))
+      ))
+    )
 
 ;(year-genre-rating-duration-actor "2019" "Comedy" "8.0" "100" "")
 ;(year-genre-rating-duration-actor-director "2019" "Comedy" "8.0" "100" "J.K. Simmons" "Pete Docter")
+;(year-genre-rating-duration-actor-director
+  ;"2020" "Comedy" "8.0" "100" "" "")
+;(year-genre-rating-duration-actor-director "2019" "Comedy" "8.0" "" "" "Pete Docter")
+;(year-genre-rating-duration-actor-director "" "Comedy" "" "" "" "")
