@@ -1,7 +1,7 @@
 (ns user.user
   (:require [ds.ds :refer :all]
-            [clojure.string :as str]
-            [blogic.blogic :refer :all]))
+            [blogic.blogic :refer :all]
+            [validation.validation :refer :all]))
 
 (defn get-value
   "Reading value entered by user"
@@ -12,36 +12,80 @@
     )
   )
 
-;(defn first-try
-;  []
-;  (let [year (get-value "year")
-;        genre (get-value "genre")]
-;    (print-format (year-genre year genre)))
-;  )
+(defn get-value-required-field
+  "Reading value entered by user"
+  [x val-fun]
+  (println (str "Please enter " x  ))
+  (let [value (read-line)]
+    ;(println  "Your input: " \" value \")
+    (if-not (val-fun value)
+      (do
+        (println "\u001b[31m"
+                 "This is REQUIRED field. Try again..."
+                 "\u001b[0m")
+        (println)
+        (get-value-required-field x val-fun)
+        )
+      value
+      )
+    )
+  )
 
-;(defn try-with-x
-;  []
-;  (let [year (get-value "year")
-;        genre (get-value "genre")]
-;    (if (= year "x")
-;      (print-format (find-genre genre movies))
-;      (print-format (year-genre year genre)))
-;    ))
+(defn get-value-required-field-num
+  "Reading value entered by user"
+  [x val-fun num-fun]
+  (println (str "Please enter " x  ))
+  (let [value (read-line)]
+    ;(println  "Your input: " \" value \")
+    (if-not (val-fun value)
+      (do
+        (println "\u001b[31m"
+                 "This is REQUIRED field. Try again..."
+                 "\u001b[0m")
+        (println)
+        (get-value-required-field-num x val-fun num-fun)
+        )
+      (if-not (num-fun value)
+        (do
+          (println "\u001b[31m"
+                   "Invalid input! This field requires a number."
+                   "\u001b[0m")
+          (println)
+          (get-value-required-field-num x val-fun num-fun)
+          )
+        value
+        )
+      )
+    )
+  )
+
 (defn first-choice
   []
-  (println "If you want to skip field, just press ENTER")
+  (println "REQUIRED fields are marked with *")
+  (println "If you want to skip OPTIONAL field, just press ENTER")
   (println)
-  (let [year (get-value "year: (will find entered age or younger)")
-        genre (get-value "genre:
+  (let [year (get-value-required-field-num
+               "year * :
+# will find entered age or younger" is-empty check-int)
+        genre (get-value-required-field
+                "genre * :
 (Film-Noir, Thriller, Horror, Action, Adventure, War, Drama,
-Mystery, Crime, Comedy, Romance, Fantasy, Family, Music, ...)")
-        rating (get-value "rating: (will find entered rate or higher)")
-        duration (get-value "duration: (will find entered duration or shorter)")
-        actor (get-value "actor:")
-        director (get-value "director:")]
-    (print-format
-      (year-genre-rating-duration-actor-director
-        year genre rating duration actor director))
-
+Mystery, Crime, Comedy, Romance, Fantasy, Family, Music, ...)" is-empty)
+        rating (get-value-required-field-num
+                 "rating * :
+# will find entered rate or higher" is-empty check-double)
+        duration (get-value-required-field-num
+                   "duration (min) * :
+# will find entered duration or shorter" is-empty check-int)
+        actor (get-value "actor (optional field):")
+        director (get-value "director (optional field):")]
+    (let [result (print-format
+                   (year-genre-rating-duration-actor-director
+                     year genre rating duration actor director))]
+      (if (empty? result)
+        (println "Sorry, I have not found any movie based on your criteria.")
+        result
+        )
+      )
     ))
 

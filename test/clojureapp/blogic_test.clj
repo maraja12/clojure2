@@ -1,7 +1,9 @@
 (ns clojureapp.blogic-test
   (:require [blogic.blogic :refer :all]
             [ds.ds :refer :all]
-            [midje.sweet :refer :all]))
+            [midje.sweet :refer :all]
+            [validation.validation :refer :all]
+            ))
 
 (fact "Checking if obtained movie(s) match all criteria"
       (year-genre-rating-duration-actor-director
@@ -36,13 +38,6 @@
       (year-genre-rating-duration-actor-director
         "1900" "" "7.0" "300" "" "" ) =>
       movies-with-stars
-      )
-
-(fact "Invalid input for number fields (year, rating, duration)"
-      (let [result (year-genre-rating-duration-actor-director
-                     "" "" "" "" "" "")]
-        (= nil result) => true
-        )
       )
 
 (defn check-include

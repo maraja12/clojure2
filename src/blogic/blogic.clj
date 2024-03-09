@@ -1,6 +1,7 @@
 (ns blogic.blogic
   (:require [clojure.string :as str]
-            [ds.ds :refer :all]))
+            [ds.ds :refer :all]
+            [validation.validation :refer :all]))
 
 (defn find-genre
   "Filtering data by genre"
@@ -14,27 +15,6 @@
   (filter #(clojure.string/includes? (:Series_Title %) title) movies))
 ;(find-title "Casino")
 
-(defn str-to-int
-  "Converting string into integer"
-  [s]
-  (if (not (empty? s))
-    (try
-      (Integer/parseInt s)
-      (catch NumberFormatException e
-        ;(println "Invalid input! This filed requires a number.")
-        nil))
-    )
-  )
-
-(defn str-to-double
-  "Converting string into double"
-  [s]
-  (try
-    (Double/parseDouble s)
-    (catch NumberFormatException e
-      ;(println "Invalid input! This filed requires a number.")
-      nil))
-  )
 
 (defn extract-duration
   "Extracting number from :Runtime"
@@ -149,20 +129,16 @@
   (let [year (str-to-int year)
         rating (str-to-double rating)
         duration (str-to-int duration)]
-    (if (some nil? [year rating duration])
-      (println "
-      Invalid input! This filed requires a number.
-      Please enter the value again...")
-      (filter #(and (>= (or (str-to-int (:Released_Year %)) 0) year)
-                    (clojure.string/includes? (:Genre %) genre)
-                    (>= (or (str-to-double (:IMDB_Rating %)) 0) rating)
-                    (<= (or (str-to-int (extract-duration (:Runtime %))) 0)
-                        duration)
-                    (clojure.string/includes? (:Stars %) actor)
-                    (clojure.string/includes? (:Director %) director)
-                    )
-              (movies-with-stars movies))
-      ))
+    (filter #(and (>= (or (str-to-int (:Released_Year %)) 0) year)
+                  (clojure.string/includes? (:Genre %) genre)
+                  (>= (or (str-to-double (:IMDB_Rating %)) 0) rating)
+                  (<= (or (str-to-int (extract-duration (:Runtime %))) 0)
+                      duration)
+                  (clojure.string/includes? (:Stars %) actor)
+                  (clojure.string/includes? (:Director %) director)
+                  )
+            (movies-with-stars movies))
+    )
     )
 
 ;(year-genre-rating-duration-actor "2019" "Comedy" "8.0" "100" "")
