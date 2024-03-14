@@ -1,16 +1,15 @@
 (ns user.user
   (:require [ds.ds :refer :all]
             [blogic.blogic :refer :all]
-            [validation.validation :refer :all]))
+            [validation.validation :refer :all]
+            [db.db :refer :all]))
 
 (defn get-value
   "Reading value entered by user"
   [x]
   (println (str "Please enter " x " " ))
   (let [value (read-line)]
-    value
-    )
-  )
+    value))
 
 (defn get-value-required-field
   "Reading value entered by user"
@@ -24,12 +23,8 @@
                  "This is REQUIRED field. Try again..."
                  "\u001b[0m")
         (println)
-        (get-value-required-field x val-fun)
-        )
-      value
-      )
-    )
-  )
+        (get-value-required-field x val-fun))
+      value)))
 
 (defn get-value-required-field-num
   "Reading value entered by user"
@@ -43,21 +38,15 @@
                  "This is REQUIRED field. Try again..."
                  "\u001b[0m")
         (println)
-        (get-value-required-field-num x val-fun num-fun)
-        )
+        (get-value-required-field-num x val-fun num-fun))
       (if-not (num-fun value)
         (do
           (println "\u001b[31m"
                    "Invalid input! This field requires a number."
                    "\u001b[0m")
           (println)
-          (get-value-required-field-num x val-fun num-fun)
-          )
-        value
-        )
-      )
-    )
-  )
+          (get-value-required-field-num x val-fun num-fun))
+        value))))
 
 (defn first-choice
   []
@@ -79,13 +68,50 @@ Mystery, Crime, Comedy, Romance, Fantasy, Family, Music, ...)" is-empty)
 # will find entered duration or shorter" is-empty check-int)
         actor (get-value "actor (optional field):")
         director (get-value "director (optional field):")]
-    (let [result (print-format
-                   (year-genre-rating-duration-actor-director
-                     year genre rating duration actor director))]
+    (let [result (year-genre-rating-duration-actor-director
+                   year genre rating duration actor director)]
       (if (empty? result)
-        (println "Sorry, I have not found any movie based on your criteria.")
-        result
-        )
-      )
-    ))
+        (println "Sorry, I have not found any movie based on your criteria...")
+        (print-format result)))))
+
+;(defn movie-by-title
+;  []
+;  "Finding a film by title user entered"
+;  (let [title (get-value-required-field "title :" is-empty)
+;        movie (find-title title)
+;        genre (map :Genre movie)]
+;    (print-movie movie)
+;
+;    ))
+;(movie-by-title)
+
+(defn registration-input
+  []
+  (let [username (get-value-required-field "username: " not-empty)
+        password (get-value-required-field "password" not-empty)]
+    (if (registration (get-connection) username password)
+      (do
+        (println "\nYou are successfully registered."))
+      (do
+        (println "\nUser with this username already exists. Try again...\n")
+        (registration-input)))))
+(defn login-input
+  []
+  (let [username (get-value-required-field "username: " not-empty)
+        password (get-value-required-field "password: " not-empty)
+        user(login-user (get-connection)
+                        username password)]
+    (if-not user
+      (do
+        (println "\u001b[31m"
+                 "Incorrect credentials. Try again..."
+                 "\u001b[0m")
+        (println)
+        (login-input))
+      (do
+        ;(println user)
+        user))))
+;(login-input)
+
+
 

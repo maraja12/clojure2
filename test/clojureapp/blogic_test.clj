@@ -37,17 +37,14 @@
        so it should return whole dataset"
       (year-genre-rating-duration-actor-director
         "1900" "" "7.0" "300" "" "" ) =>
-      movies-with-stars
-      )
+      movies-with-stars)
 
 (defn check-include
   "Returns vector of true/false values depending on whether
   the key contains forwarded value"
   [key value ds]
   (mapv
-    #(clojure.string/includes? (key %) value) ds
-    )
-  )
+    #(clojure.string/includes? (key %) value) ds))
 
 (fact "Checking whether each movie of the result contains
        forwarded value of genre"
@@ -55,14 +52,12 @@
                      "2019" "Comedy" "8" "150" "" "")]
         (every? true? (check-include :Genre "Comedy" result)) => true
         ;(some false? (check-include :Genre "Comedy" result)) => falsey
-        )
-      )
+        ))
 
 (defn map-years
   "Making an array of all years from dataset"
   [ds]
-  (mapv #(str-to-int (:Released_Year %)) ds)
-  )
+  (mapv #(str-to-int (:Released_Year %)) ds))
 
 (def years
   (reduce
@@ -71,9 +66,7 @@
         acc
         (conj acc e)
         ))
-    [] (map-years movies)
-    )
-  )
+    [] (map-years movies)))
 ;(count years)
 
 (defn check-year
@@ -83,17 +76,14 @@
     (fn [acc e]
       (if (> year e)
         acc
-        (conj acc (str e))
-        ))
-    [] years
-    ))
+        (conj acc (str e))))
+    [] years))
 ;(check-year 2019)
 ;(count (check-year 2019))
 (fact "Checking whether Released years from the result
        are equal to expected years"
       (let [result (find-year "2019")]
-        (= (check-year 2019) (mapv :Released_Year result)) => true
-        ))
+        (= (check-year 2019) (mapv :Released_Year result)) => true))
 
 
 ;(mapv :Released_Year (find-year "2019"))
