@@ -52,7 +52,11 @@ Please, choose between two options:
 
 (defn menu-logged
   ([]
-  (menu-logged (login-input)))
+   (let [user (login-input)]
+     (menu-logged user)
+     ;user
+     )
+   )
   ([logged-user]
    (println (str "
 Welcome " (:USERS/USERNAME logged-user) ", I can suggest movie(s) based on...
@@ -64,6 +68,7 @@ Welcome " (:USERS/USERNAME logged-user) ", I can suggest movie(s) based on...
    logged-user
    ))
 
+;(menu-logged)
 
 (defn handle-menu-login
   []
@@ -73,19 +78,24 @@ Welcome " (:USERS/USERNAME logged-user) ", I can suggest movie(s) based on...
       "1" (do
             (registration-input)
             (println "Now you are able to sign in!\n")
-            (menu-logged)
-            (let [choice (get-value "your choice:")]
+            (let [logged-user (menu-logged)
+                  choice (get-value "your choice:")]
               (case choice
-                "1" (first-choice)
+                "1" (do
+                      (println (str "hello " (:USERS/USERNAME logged-user)))
+                      (first-choice))
                 "2"
                 )))
       "2" (do
-            (menu-logged)
-            (let [choice (get-value "your choice:")]
+            (let [logged-user (menu-logged)
+                  choice (get-value "your choice:")]
               (case choice
-                "1" (first-choice)
+                "1" (do
+                      (println (str "hello " (:USERS/USERNAME logged-user)))
+                      (first-choice))
                 "2"
                 ))))))
+
 
 (defn user-choice-main-menu
   []

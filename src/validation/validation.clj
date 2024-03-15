@@ -22,8 +22,6 @@
 (defn is-empty
   [x]
  (not (empty? x)))
-(is-empty "")
-
 
 (defn check-int
   "Checks if string that user entered is integer type"
@@ -34,7 +32,7 @@
   "Checks if string that user entered is double type"
   [n]
   (number? (str-to-double n)))
-;(number? nil)
+
 
 
 

@@ -48,6 +48,18 @@
           (get-value-required-field-num x val-fun num-fun))
         value))))
 
+(defn movie-by-title
+  []
+  "Finding a film by title user entered"
+  (let [title (get-value-required-field "title :" is-empty)
+        movie (find-title title)
+        genre (map :Genre movie)]
+    (print-movie movie)
+    (println "Have you liked it? Please, rate the movie. [5 - 10]")
+    (let [rate (read-line)]
+      (assoc (first movie) :userRate rate))))
+;(movie-by-title)
+
 (defn first-choice
   []
   (println "REQUIRED fields are marked with *")
@@ -72,19 +84,19 @@ Mystery, Crime, Comedy, Romance, Fantasy, Family, Music, ...)" is-empty)
                    year genre rating duration actor director)]
       (if (empty? result)
         (println "Sorry, I have not found any movie based on your criteria...")
-        (print-format result)))))
-
-;(defn movie-by-title
-;  []
-;  "Finding a film by title user entered"
-;  (let [title (get-value-required-field "title :" is-empty)
-;        movie (find-title title)
-;        genre (map :Genre movie)]
-;    (print-movie movie)
-;
-;    ))
-;(movie-by-title)
-
+        (do
+          (print-format result)
+          (movie-by-title))))))
+;(first-choice)
+(defn first-choice-logged-user
+  [username]
+  (let [res (first-choice)
+        title (:Series_Title res)
+        genre (:Genre res)
+        rate (:userRate res)]
+    (insert-history
+      (get-connection) username title genre (adapt-rating rate))))
+;(first-choice-logged-user "marija")
 (defn registration-input
   []
   (let [username (get-value-required-field "username: " not-empty)
@@ -93,7 +105,9 @@ Mystery, Crime, Comedy, Romance, Fantasy, Family, Music, ...)" is-empty)
       (do
         (println "\nYou are successfully registered."))
       (do
-        (println "\nUser with this username already exists. Try again...\n")
+        (println "\u001B[31m\"
+                  User with this username already exists. Try again...
+                  \"\\u001b[0m\"")
         (registration-input)))))
 (defn login-input
   []
