@@ -36,7 +36,6 @@
                      WHERE USERNAME = (?)" username])]
     (when result
       (first result))))
-;(find-user (get-connection) "marija")
 
 (defn registration
   [conn username password]
@@ -69,7 +68,6 @@
     conn
     ["SELECT h.user_id, h.title, h.genre, h.rating
     FROM history h JOIN users s ON (h.user_id = s.id)"]))
-;(get-history (get-connection))
 
 (defn get-history-userId
   [conn user-id]
@@ -79,8 +77,6 @@
     FROM history h JOIN users u ON (h.user_id = u.id)
     WHERE h.user_id = (?)" user-id]))
 
-;(get-history-userId (get-connection) 1)
-;(find-user (get-connection) "marija")
-;(:HISTORY/TITLE (first (get-history-userId (get-connection) 1)))
+
 
 

@@ -49,7 +49,7 @@
         value))))
 (defn movie-by-title
   []
-  "Finding a film by title user entered"
+  "Finding a film based on title user entered"
   (let [title (get-value "title of film you are interested in: ")
         movie (find-title title)]
     (if (not (empty? movie))
@@ -59,7 +59,6 @@
               (let [rate (get-value-required-field "your rate for the movie. [5 - 10]" is-empty)]
                 (assoc (first movie) :userRate rate)))
             nil)))
-;(movie-by-title)
 
 (defn first-choice
   "Finding films based on genre, year, rating, duration, actor, director"
@@ -89,8 +88,9 @@ Mystery, Crime, Comedy, Romance, Fantasy, Family, Music, ...)" is-empty)
         (do
           (print-format result)
           result)))))
-;(first-choice)
+
 (defn save-movie
+  "Inserts movie in user history"
   [username movies]
   (if (not (empty? movies))
     (do
@@ -110,9 +110,9 @@ Mystery, Crime, Comedy, Romance, Fantasy, Family, Music, ...)" is-empty)
       (do
         (println "\nYou are successfully registered."))
       (do
-        (println "\u001B[31m\"
-                  User with this username already exists. Try again...
-                  \"\\u001b[0m\"")
+        (println "\u001b[31m"
+                  "User with this username already exists. Try again..."
+                  "\u001b[0m")
         (registration-input)))))
 (defn login-input
   []
@@ -130,7 +130,7 @@ Mystery, Crime, Comedy, Romance, Fantasy, Family, Music, ...)" is-empty)
       (do
         ;(println user)
         user))))
-;(login-input)
+
 
 
 

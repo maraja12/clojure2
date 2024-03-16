@@ -61,12 +61,10 @@
     (let [m (nth m index)]
       (println (str (inc index) ". ") (format-output m)))))
 
-;(print-format movies)
 (defn print-movie
   "Printing movie in new format"
   [m]
   (println)
   (println "*** MOVIE FOR YOU ***")
   (doseq [movie m]
-    (println (format-movie movie))
-    ))
+    (println (format-movie movie))))

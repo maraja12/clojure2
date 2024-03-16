@@ -31,7 +31,9 @@
       (with-in-str "\n\nAAA\n2019"
                    (get-value-required-field-num " number test" is-empty check-int))
       => "2019")
+(fact "Empty movies entry"
+      (save-movie "marija" []) => nil)
 
-
-
-
+(fact "Empty username and movies"
+      (save-movie "" []) => nil
+      (save-movie nil nil) => nil)
