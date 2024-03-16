@@ -24,7 +24,14 @@ As some people do not like to register and to have their data collected, MOVIELA
   ![Snimak ekrana (862)](https://github.com/maraja12/clojure2/assets/115712461/7e79ddaa-7fc2-436d-aa09-577f6c09d4ee)
 
 
-* Other option gives much more possibilities. User can still find movie(s) to watch by filling in mentioned parametars.
+* If user chooses other option, new menu apperas with registration and login part, depending on wheteher user have its
+  account or not. If the answer is no, after successful registration, login part follows and the user is further on treated
+  under that username, until he leaves the app.
+
+  ![Snimak ekrana (865)](https://github.com/maraja12/clojure2/assets/115712461/f2198434-1be8-4ea3-8591-a7cb846de645)
+
+  
+  Usage of MOVIELAND with signig in gives much more possibilities. User can still find movie(s) to watch by filling in mentioned parametars.
   However, now it is possible to enter a title of the film, if desired, and rate it. The movie and rate will be stored in
   database under logged-in username.
 
@@ -34,17 +41,17 @@ As some people do not like to register and to have their data collected, MOVIELA
   Thanks to that, it is possible to use this **recommendation algorithm**. The algorithm takes last rated movie of user's history
   and search for other users who rated identical movie with the same rate. After that, it looks for all movies that found
   users ever rated and filter ones marked with highest rate (in movies.csv, it is five). Of all these films, the ones with
-  compatible genre with stored movie are taken and represented to user. Alghoritam always starts from tha last inserted movie in
+  compatible genre with stored movie are taken and represented to user. Alghoritam always starts from the last inserted movie in
   user's history, in order not to always present the same list of recommended films. If it is not possible to find recommended movies (in
-  case that no user rated that film, or rated with same mark, or film with that id does not exist at imdb dataset)
+  case no user rated that film, or rated with same mark, or film with that id does not exist at imdb dataset)
   from the last user's input, alghoritam searches for the previous one.
   
   To sum up, idea is to bind users with similar opinion, and to recommend movies from the same category (genre) that one of the users
   consider great and rated with highest mark.
 
   I hope it will be more clear after going trough the code and seeing how it works.
-  I am very sorry I couldn't find movie dataset with all the same movie titles (because I also needed compatible ratings dataset),
-  but I explained previous why I chose this way. I tried to translate some of titles, and somehow improve the soultion.
+  I am very sorry I couldn't find movie datasets with all the same movie titles (because I also needed compatible ratings dataset),
+  but I explained previous why I chose this way. I tried to rename some of titles, and somehow improve the soultion.
   Fortunately, the majority is the same.
 
 
