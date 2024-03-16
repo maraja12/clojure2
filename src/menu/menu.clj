@@ -51,12 +51,16 @@ Welcome " (:USERS/USERNAME logged-user) ", I can suggest movie(s) based on...
   (let [choice (get-value "your choice:")]
     (case choice
       "1" (do
-            (first-choice-logged-user(:USERS/USERNAME logged-user))
+            (let [movies (first-choice)]
+              (save-movie(:USERS/USERNAME logged-user) movies)
+              )
             (when-not (= "END" choice)
               (two-choices logged-user)))
       "2" (do
             (when-not (= "END" choice)
-              (take-from-history logged-user)
+              (let [movies (take-from-history logged-user)]
+                (save-movie(:USERS/USERNAME logged-user) movies)
+                )
               (two-choices logged-user)))
       "END"
       ;(take-from-history logged-user)

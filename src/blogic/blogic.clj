@@ -291,8 +291,11 @@
                res (find-movie-in-movies-imdb title rate genre)]
            (if (empty? res)
              (take-from-history user (next h))
-             (print-format res))))
+             (do
+               (print-format res)
+               res))))
        (do
-         (println "Your history is empty! You have not rated any movies yet...")
+         (println "Your history is empty! You have not rated any movies yet...
+or other users do not have same opinion as you.")
          nil)))))
 ;(take-from-history #:USERS{:ID 1, :USERNAME "marija", :PASSWORD "marija12"})

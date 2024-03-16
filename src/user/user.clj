@@ -47,19 +47,22 @@
           (println)
           (get-value-required-field-num x val-fun num-fun))
         value))))
-
 (defn movie-by-title
   []
   "Finding a film by title user entered"
-  (let [title (get-value-required-field "title of film you would like to watch: " is-empty)
+  (let [title (get-value "title of film you are interested in: ")
         movie (find-title title)]
-    (print-movie movie)
-    (println "Have you liked it? Please, rate the movie. [5 - 10]")
-    (let [rate (read-line)]
-      (assoc (first movie) :userRate rate))))
+    (if (not (empty? movie))
+            (do
+              (print-movie movie)
+              (println "Have you liked it?")
+              (let [rate (get-value-required-field "your rate for the movie. [5 - 10]" is-empty)]
+                (assoc (first movie) :userRate rate)))
+            nil)))
 ;(movie-by-title)
 
 (defn first-choice
+  "Finding films based on genre, year, rating, duration, actor, director"
   []
   (println "REQUIRED fields are marked with *")
   (println "If you want to skip OPTIONAL field, just press ENTER")
@@ -85,17 +88,20 @@ Mystery, Crime, Comedy, Romance, Fantasy, Family, Music, ...)" is-empty)
         (println "Sorry, I have not found any movie based on your criteria...")
         (do
           (print-format result)
-          (movie-by-title))))))
+          result)))))
 ;(first-choice)
-(defn first-choice-logged-user
-  [username]
-  (let [res (first-choice)
-        title (:Series_Title res)
-        genre (:Genre res)
-        rate (:userRate res)]
-    (insert-history
-      (get-connection) username title genre (adapt-rating rate))))
-;(first-choice-logged-user "marija")
+(defn save-movie
+  [username movies]
+  (if (not (empty? movies))
+    (do
+      (let [res (movie-by-title)
+            title (:Series_Title res)
+            genre (:Genre res)
+            rate (:userRate res)]
+        (if (not= res nil)
+          (insert-history
+            (get-connection) username title genre (adapt-rating rate)))))))
+
 (defn registration-input
   []
   (let [username (get-value-required-field "username: " not-empty)
