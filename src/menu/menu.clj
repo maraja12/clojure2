@@ -34,10 +34,36 @@ Press any other key if you want to exit the app.
 ********************************************************************
 I can find movie(s) based on:
 genre, director, rating, duration, director and actor.\n"))
-  (first-choice)
-  )
+  (first-choice))
 
-(defn menu-login
+(defn two-choices
+  ([]
+   (two-choices (login-input))
+   )
+  ([logged-user]
+   (println (str "
+Welcome " (:USERS/USERNAME logged-user) ", I can suggest movie(s) based on...
+
+1. genre, year, rating, duration, director and actor
+2. your previous preferences
+"
+                               ))
+  (let [choice (get-value "your choice:")]
+    (case choice
+      "1" (do
+            (first-choice-logged-user(:USERS/USERNAME logged-user))
+            (when-not (= "END" choice)
+              (two-choices logged-user)))
+      "2" (do
+            (when-not (= "END" choice)
+              (take-from-history logged-user)
+              (two-choices logged-user)))
+      "END"
+      ;(take-from-history logged-user)
+      ))))
+
+
+(defn handle-menu-login
   []
   (println (str "
 
@@ -48,69 +74,27 @@ Please, choose between two options:
 1. I do not have an account.
 2. I have an account.
 
-")))
-
-(defn menu-logged
-  ([]
-   (let [user (login-input)]
-     (menu-logged user)
-     ;user
-     )
-   )
-  ([logged-user]
-   (println (str "
-Welcome " (:USERS/USERNAME logged-user) ", I can suggest movie(s) based on...
-
-1. genre, year, rating, duration, director and actor
-2. your history
-"
-              ))
-   logged-user
-   ))
-
-;(menu-logged)
-
-(defn handle-menu-login
-  []
-  (menu-login)
+"))
   (let [account (get-value "your choice:")]
     (case account
       "1" (do
             (registration-input)
             (println "Now you are able to sign in!\n")
-            (let [logged-user (menu-logged)
-                  choice (get-value "your choice:")]
-              (case choice
-                "1" (do
-                      (println (str "hello " (:USERS/USERNAME logged-user)))
-                      (first-choice))
-                "2"
-                )))
-      "2" (do
-            (let [logged-user (menu-logged)
-                  choice (get-value "your choice:")]
-              (case choice
-                "1" (do
-                      (println (str "hello " (:USERS/USERNAME logged-user)))
-                      (first-choice))
-                "2"
-                ))))))
+            (two-choices)
+            )
+      "2" (two-choices)
+      "END")))
 
 
 (defn user-choice-main-menu
   []
   (let [choice (get-value "your choice:")]
     (case choice
-      "1" (do
-            (handle-menu-login)
-            )
+      "1" (handle-menu-login)
       "2" (menu-no-login)
       "END")))
 (defn start
   []
   (start-menu)
   (when-not (= "END" (user-choice-main-menu))
-    ;(if (= (user-choice-main-menu) "1")
-    ;
-    ;  )
     (start)))

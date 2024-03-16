@@ -51,9 +51,8 @@
 (defn movie-by-title
   []
   "Finding a film by title user entered"
-  (let [title (get-value-required-field "title :" is-empty)
-        movie (find-title title)
-        genre (map :Genre movie)]
+  (let [title (get-value-required-field "title of film you would like to watch: " is-empty)
+        movie (find-title title)]
     (print-movie movie)
     (println "Have you liked it? Please, rate the movie. [5 - 10]")
     (let [rate (read-line)]

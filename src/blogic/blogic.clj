@@ -131,7 +131,6 @@
                   (clojure.string/includes? (:Stars %) actor)
                   (clojure.string/includes? (:Director %) director))
             (movies-with-stars movies))))
-
 (defn adapt-rating
   [rate]
   "If user enters rating 5, it is converted into 0... 10 -> 5
@@ -232,7 +231,7 @@
       (fn [acc e]
         (let [g (:genres e)
               res (map #(clojure.string/includes? g %) genres)]
-          (if (every? true? res)
+          (if (some true? res)
             (conj acc e)
             acc)))
       [] movies)))
@@ -247,7 +246,8 @@
           (conj acc (clean-title (:title e)))
           acc))
       [] movies)))
-;(titles-in-movies-imdb "Casino" "4.0" "Crime, Drama")
+;(titles-in-movies-imdb "Casino" "3.5" "Crime, Drama")
+;(titles-in-movies-imdb "Perfetti sconosciuti" "Comedy, Drama" "2.5")
 
 (defn find-movie-in-movies-imdb
   "Replacing movies from movies.csv"
@@ -260,5 +260,39 @@
           acc))
       [] titles)))
 
-;(find-movie-in-movies-imdb "Casino" "4.0" "Crime, Drama")
+;(find-movie-in-movies-imdb "Casino" "3.5" "Crime, Drama")
+;(find-movie-in-movies-imdb "Green Book" "4.5" "Biography, Comedy, Drama")
+;(find-movie-in-movies-imdb "Amelie" "4.5" "Biography, Comedy, Drama")
 
+(defn reverse-array
+  [a]
+  (reduce
+    (fn [acc e]
+      (conj acc e))
+    '() a))
+(defn user-history
+  "Reverses order of rows in user history"
+  [user]
+  (reverse-array (get-history-userId (get-connection) (:USERS/ID user))))
+
+(defn take-from-history
+  ([user]
+   (take-from-history user (user-history user))
+   )
+  ([user h]
+   "Recommendation based on latest user history, so it always
+   has new recommendation list for watching."
+   (let [history (first h)]
+     (if (not= history nil)
+       (do
+         (let [title (:HISTORY/TITLE history)
+               rate (:HISTORY/RATING history)
+               genre (:HISTORY/GENRE history)
+               res (find-movie-in-movies-imdb title rate genre)]
+           (if (empty? res)
+             (take-from-history user (next h))
+             (print-format res))))
+       (do
+         (println "Your history is empty! You have not rated any movies yet...")
+         nil)))))
+;(take-from-history #:USERS{:ID 1, :USERNAME "marija", :PASSWORD "marija12"})

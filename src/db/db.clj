@@ -48,8 +48,7 @@
                 username password])
         (.close conn)
         true)
-      false
-      )))
+      false)))
 
 (defn login-user
   [conn username password]
@@ -62,8 +61,7 @@
   (let [user-id (:USERS/ID (find-user conn username))]
     (jdbc/execute!
       conn ["INSERT INTO history (user_id, title, genre, rating)
-    VALUES (?, ?, ?, ?)" user-id title genre rating])
-    (.close conn)))
+    VALUES (?, ?, ?, ?)" user-id title genre rating])))
 
 (defn get-history
   [conn]
@@ -79,8 +77,10 @@
     conn
     ["SELECT h.user_id, h.title, h.genre, h.rating
     FROM history h JOIN users u ON (h.user_id = u.id)
-    WHERE h.user_id = (?)" user-id]
-    ))
+    WHERE h.user_id = (?)" user-id]))
 
 ;(get-history-userId (get-connection) 1)
+;(find-user (get-connection) "marija")
 ;(:HISTORY/TITLE (first (get-history-userId (get-connection) 1)))
+
+
