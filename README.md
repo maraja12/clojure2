@@ -4,11 +4,18 @@ MOVIELAND is Clojure app designed to help users and save ther time while looking
 
 This app is working both with csv files and h2 database. CSV files were downloaded from https://www.kaggle.com/, where
 I have found one file with top 1000 movies (imdb_top_1000.csv) and two paired files with user ratings for specific movies 
-(movies.csv, raitings.csv). I could have only used movies.csv file, instead of imdb_top_1000.csv (because not all movie titles match), 
+(movies.csv, raitings.csv). Raitings.csv file contains ratings from 100 users. 
+
+I had difficulties in finding dataset with same
+movie titles as in imdb_top_1000.csv. I could have only used movies.csv file, instead of imdb_top_1000.csv (because not all movie titles match), 
 but it provides user much more details, such as director, actors or average rating from IMDB... I assume that is relevant information for every filmophile. 
 Furthermore, it is more fun this way.
+So, I went trough the datasets and tried to rename titles, and somehow improve the soultion... Now, almost all the titles match.
 
-Database is used for recommendation algorithm. I will talk about that in more detail soon...
+
+Database is used for recommendation algorithm. I will talk about that in more detail soon... Just to mention, in order to use
+the app it is necessary to load the script, via (execute-script) in db.db namespace.
+
 
 As some people do not like to register and to have their data collected, MOVIELAND offers two ways of using the app.
 
@@ -50,9 +57,9 @@ As some people do not like to register and to have their data collected, MOVIELA
   consider great and rated with highest mark.
 
   I hope it will be more clear after going trough the code and seeing how it works.
-  I am very sorry I couldn't find movie datasets with all the same movie titles (because I also needed compatible ratings dataset),
-  but I explained previous why I chose this way. I tried to rename some of titles, and somehow improve the soultion.
-  Fortunately, the majority is the same.
+  I am very sorry I couldn't find movie datasets with all the same movie titles,
+  but I explained previous why I chose this way. Fortunately, the majority is the same.
+
 
 
 
